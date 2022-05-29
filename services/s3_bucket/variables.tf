@@ -5,5 +5,15 @@ variable "aws_region" {
 
 variable "aws_account" {
   type        = string
-  description = "name of the aws account e.g. matterport-exp"
+  description = "name of the aws account"
+}
+
+variable "s3_bucket_name" {
+  type        = string
+  description = "name of the bucket"
+}
+
+variable "tagname" {
+  type        = string
+  description = "tagname"
 }
