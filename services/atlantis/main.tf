@@ -1,5 +1,5 @@
 module "atlantis" {
-  source  = "terraform-aws-modules/atlantis/aws"
+  source  = "github.com/terraform-aws-modules/terraform-aws-atlantis"
   version = "~> 3.0"
 
   name            = var.name
