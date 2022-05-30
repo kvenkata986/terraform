@@ -1,6 +1,8 @@
-module "wrapper" {
-  source      = "../../modules/s3_bucket"
-  bucket      = $var.s3_bucket_name
-  Name        = $var.tagname
+
+module "s3_bucket_creation" {
+
+  source         = "../../modules/s3"
+  s3_bucket_name = var.s3_bucket_name
+  tagname        = var.tagname
 
 }
