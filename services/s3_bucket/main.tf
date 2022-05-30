@@ -1,4 +1,3 @@
-
 module "s3_bucket_creation" {
 
   source         = "../../modules/s3"
