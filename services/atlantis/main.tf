@@ -1,6 +1,6 @@
 module "atlantis" {
-  source  = "github.com/terraform-aws-modules/terraform-aws-atlantis"
-  version = "~> 3.0"
+  source  = "terraform-aws-modules/atlantis/aws"
+  version = "~> 3.26.0"
 
   name            = var.name
   vpc_id          = var.vpc_id
