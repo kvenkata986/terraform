@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "oidc.eks.us-east-1.amazonaws.com/id/CBE8F7C14E75CBFC30BC70E37CB721E9"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "${OIDC_URL}:sub": "system:serviceaccount:${NAMESPACE}:${SA_NAME}"
+        }
+      }
+    }
+  ]
+}

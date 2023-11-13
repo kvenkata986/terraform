@@ -15,9 +15,13 @@ output "cluster_security_group_id" {
 }
 
 output "cluster_service_role_arn" {
-  value = aws_iam_role.eksservice.arn
+  value = aws_iam_role.eks_cluster_group.arn
 }
 
 output "cluster_service_role_name" {
-  value = aws_iam_role.eksservice.name
+  value = aws_iam_role.eks_cluster_group.name
+}
+
+output "cluster_oidc_arn" {
+  value = aws_eks_cluster.eks.identity[0].oidc[0].issuer
 }

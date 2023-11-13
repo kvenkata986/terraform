@@ -21,3 +21,7 @@ output "cluster_service_role_arn" {
 output "cluster_service_role_name" {
   value = module.eks_common.cluster_service_role_name
 }
+
+output "cluster_oidc_arn" {
+  value = module.eks_common.cluster_oidc_arn
+}

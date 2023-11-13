@@ -4,34 +4,38 @@ data "aws_iam_policy" "eks_cluster" {
   arn = "arn:${data.aws_partition.p.partition}:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role" "eksservice" {
-  name               = "eks_cfn_service_role"
-  assume_role_policy = <<EOF
-{
-    "Version": "2008-10-17",
-    "Statement": [
-        {
-            "Action": "sts:AssumeRole",
-            "Principal": {
-                "Service": "eks.amazonaws.com"
-            },
-            "Effect": "Allow",
-            "Sid": "AllowEKSAssumeRole"
+resource "aws_iam_role" "eks_cluster_group" {
+  name = "eks-cluster"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "eks.amazonaws.com"
         }
+      }
     ]
-}
-EOF
+  })
 }
 
-resource "aws_iam_role_policy_attachment" "eks_cluster" {
-  role       = aws_iam_role.eksservice.id
-  policy_arn = data.aws_iam_policy.eks_cluster.id
+resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicyCluster" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role       = aws_iam_role.eks_cluster_group.name
 }
+
+resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceControllerCluster" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.eks_cluster_group.name
+}
+
 
 resource "aws_eks_cluster" "eks" {
   name                      = var.name
   version                   = var.eks_version
-  role_arn                  = aws_iam_role.eksservice.arn
+  role_arn                  = aws_iam_role.eks_cluster_group.arn
   enabled_cluster_log_types = var.enabled_logs
 
   vpc_config {
@@ -39,7 +43,10 @@ resource "aws_eks_cluster" "eks" {
     endpoint_private_access = var.endpoint_private_access
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster]
+  depends_on = [
+    aws_iam_role_policy_attachment.AmazonEKSClusterPolicyCluster,
+    aws_iam_role_policy_attachment.AmazonEKSVPCResourceControllerCluster
+  ]
 
   tags = {
     KubernetesCluster = var.name
