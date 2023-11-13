@@ -29,3 +29,33 @@ resource "aws_iam_role" "ebs_csi_controller_sa" {
 
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"]
 }
+
+resource "kubernetes_storage_class" "ebs-sc" {
+  metadata {
+    name = "ebs-cs"
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+  }
+  parameters = {
+    type      = "gp3"
+    encrypted = "true"
+  }
+  storage_provisioner = "ebs.csi.aws.com"
+  volume_binding_mode = "WaitForFirstConsumer"
+}
+
+resource "kubernetes_annotations" "gp2-disable-default" {
+  depends_on = [
+    kubernetes_storage_class.ebs-sc
+  ]
+  api_version = "storage.k8s.io/v1"
+  kind        = "StorageClass"
+  force       = "true"
+  metadata {
+    name = "gp2"
+  }
+  annotations = {
+    "storageclass.kubernetes.io/is-default-class" = "false"
+  }
+}

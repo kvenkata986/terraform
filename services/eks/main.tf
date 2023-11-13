@@ -25,12 +25,13 @@ module "kube_proxy" {
   eks_addon_version_kube_proxy = var.eks_addon_version_kube_proxy
 }
 
-module "eks_ebscsi" {
-  source                           = "../../modules/eks_ebscsi"
-  cluster_name                     = module.eks_common.cluster_name
-  cluster_oidc_arn                 = module.eks_common.cluster_oidc_arn
-  eks_addon_version_ebs_csi_driver = var.eks_addon_version_ebs_csi_driver
-}
+#module "eks_ebscsi" {
+#  source                           = "../../modules/eks_ebscsi"
+#  cluster_name                     = module.eks_common.cluster_name
+#  cluster_oidc_arn                 = module.eks_common.cluster_oidc_arn
+#  eks_addon_version_ebs_csi_driver = var.eks_addon_version_ebs_csi_driver
+
+#}
 
 module "kubecost" {
   source                     = "../../modules/kubecost"
